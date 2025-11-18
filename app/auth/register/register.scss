@@ -1,6 +1,9 @@
+/*DISEÑO GENERAL DE LA PÁGINA REGISTER*/
+
+/*aqui añado cosas al body por problemas de tamaño con la img*/
 body {
-  overflow-y: hidden;
-  font-size: 16px;
+    overflow-y: hidden;
+    font-size: 16px;
 }
 
 .register-page {
@@ -10,11 +13,11 @@ body {
 }
 
 /* esto es para que la distribución sea 60/40*/
-.register-left{
-    flex:6;
+.register-left {
+    flex: 6;
 }
 
-.register-right{
+.register-right {
     flex: 4;
 }
 
@@ -93,8 +96,8 @@ body {
     background-color: var(--color-gray);
 }
 
-.register-right form select{
-    
+.register-right form select {
+
     margin-top: 10px;
     border-radius: 10px;
     padding: 1rem 2.2rem;
@@ -103,11 +106,11 @@ body {
     color: var(--color-dark);
     background-color: var(--color-gray);
 
-    
+
 }
 
 .register-right form button {
-    
+
     background-color: var(--color-primary);
     color: var(--color-white);
     font-size: 18px;
@@ -125,7 +128,7 @@ body {
     background-color: var(--color-secondary);
 }
 
-.register-right-cuenta{
+.register-right-cuenta {
     font-size: 16px;
     font-family: var(--font-sedan);
     width: 400px;

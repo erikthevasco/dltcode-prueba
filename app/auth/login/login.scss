@@ -1,3 +1,5 @@
+/*DISEÑO GENERAL DE LA PÁGINA LOGIN*/
+
 .login-page {
 
     display: flex;
@@ -5,11 +7,11 @@
 }
 
 /* esto es para que la distribución sea 60/40*/
-.login-left{
-    flex:6;
+.login-left {
+    flex: 6;
 }
 
-.login-right{
+.login-right {
     flex: 4;
 }
 
@@ -88,7 +90,7 @@
 }
 
 .login-right form button {
-    
+
     background-color: var(--color-primary);
     color: var(--color-white);
     font-size: 18px;
@@ -106,7 +108,7 @@
     background-color: var(--color-secondary);
 }
 
-.login-right-cuenta{
+.login-right-cuenta {
     font-size: 16px;
     font-family: var(--font-sedan);
     width: 400px;
