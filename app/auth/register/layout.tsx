@@ -1,0 +1,10 @@
+import "../../globals.scss";
+import "./register.scss";
+
+export default function RegisterLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="register-layout">
+      {children}
+    </div>
+  );
+}
