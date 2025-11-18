@@ -53,7 +53,6 @@ body {
 
 .register-right h1 {
 
-    margin-top: 30px;
     margin-bottom: 20px;
     font-size: 25px;
     color: var(--color-secondary);
@@ -103,6 +102,8 @@ body {
     font-family: var(--font-sedan);
     color: var(--color-dark);
     background-color: var(--color-gray);
+
+    
 }
 
 .register-right form button {
@@ -128,5 +129,5 @@ body {
     font-size: 16px;
     font-family: var(--font-sedan);
     width: 400px;
-    margin-left: 80px;
+    margin-left: 135px;
 }
