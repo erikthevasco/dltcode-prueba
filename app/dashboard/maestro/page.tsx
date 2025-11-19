@@ -15,65 +15,65 @@ export default function MasterPage() {
 
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setPopup(null);
+        e.preventDefault();
+        setPopup(null);
 
-    /* validaciones */
-    if (!name.trim()) {
-        setPopup({ message: "Debes indicar el nombre de la criatura.", type: "error" });
-        setTimeout(() => setPopup(null), 3000);
-        return;
-    }
-    if (!type) {
-        setPopup({ message: "Debes seleccionar un tipo de criatura.", type: "error" });
-        setTimeout(() => setPopup(null), 3000);
-        return;
-    }
-    if (!power || Number(power) < 0 || Number(power) > 99) {
-        setPopup({ message: "El nivel de poder debe estar entre 0 y 99.", type: "error" });
-        setTimeout(() => setPopup(null), 3000);
-        return;
-    }
-    if (!trained) {
-        setPopup({ message: "Debes indicar si la criatura está entrenada o no.", type: "error" });
-        setTimeout(() => setPopup(null), 3000);
-        return;
-    }
-
-    try {
-        const res = await fetch("/api/creatures", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                name,
-                type,
-                power: Number(power),
-                trained,
-                userId: 1 // temporal para probar
-            })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            throw new Error(data.error || "Error al registrar la criatura");
+        /* validaciones */
+        if (!name.trim()) {
+            setPopup({ message: "Debes indicar el nombre de la criatura.", type: "error" });
+            setTimeout(() => setPopup(null), 3000);
+            return;
+        }
+        if (!type) {
+            setPopup({ message: "Debes seleccionar un tipo de criatura.", type: "error" });
+            setTimeout(() => setPopup(null), 3000);
+            return;
+        }
+        if (!power || Number(power) < 0 || Number(power) > 99) {
+            setPopup({ message: "El nivel de poder debe estar entre 0 y 99.", type: "error" });
+            setTimeout(() => setPopup(null), 3000);
+            return;
+        }
+        if (!trained) {
+            setPopup({ message: "Debes indicar si la criatura está entrenada o no.", type: "error" });
+            setTimeout(() => setPopup(null), 3000);
+            return;
         }
 
-        setPopup({ message: "Criatura registrada correctamente", type: "success" });
+        try {
+            const res = await fetch("/api/creatures", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name,
+                    type,
+                    power: Number(power),
+                    trained,
+                    userId: 1 // temporal para probar
+                })
+            });
 
-        /* resetear formulario */
-        setName("");
-        setType("");
-        setPower("");
-        setTrained("");
-        setIsCreating(false);
-        setTimeout(() => setPopup(null), 3000);
+            const data = await res.json();
 
-    } catch (err: any) {
-        setPopup({ message: err.message, type: "error" });
-        setTimeout(() => setPopup(null), 3000);
-    }
-};
+            if (!res.ok) {
+                throw new Error(data.error || "Error al registrar la criatura");
+            }
+
+            setPopup({ message: "Criatura registrada correctamente", type: "success" });
+
+            /* resetear formulario */
+            setName("");
+            setType("");
+            setPower("");
+            setTrained("");
+            setIsCreating(false);
+            setTimeout(() => setPopup(null), 3000);
+
+        } catch (err: any) {
+            setPopup({ message: err.message, type: "error" });
+            setTimeout(() => setPopup(null), 3000);
+        }
+    };
 
 
     return (
