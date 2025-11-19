@@ -79,13 +79,13 @@ export default function RegisterPage() {
                 </div>
             </div>
 
-            {/* Pop-up */}
+            {/* diseño del popup */}
             {popup && (
                 <div className={`popup ${popup.type}`}>
                     {popup.message}
                 </div>
             )}
-
+       
             <style jsx>{`
         .popup {
           position: fixed;

@@ -2,5 +2,5 @@
 
 import { useState } from "react";
 
-export default function LoginPage() {
+export default function CaretakerPage() {
 }

@@ -1,3 +1,4 @@
+# esto es para la db en docker, se definen el nombre,creedenciales,nombre de la db,etc para sql (puerto 8080)
 services:
   mysql:
     image: mysql:8
