@@ -1,0 +1,136 @@
+/*DISEÑO GENERAL DE LA PÁGINA REGISTER*/
+
+/*aqui añado cosas al body por problemas de tamaño con la img*/
+body {
+    overflow-y: hidden;
+    font-size: 16px;
+}
+
+.register-page {
+
+    display: flex;
+    height: 100vh;
+}
+
+/* esto es para que la distribución sea 60/40*/
+.register-left {
+    flex: 6;
+}
+
+.register-right {
+    flex: 4;
+}
+
+.register-left img {
+
+    width: 100%;
+    height: 130%;
+    transform: scaleX(-1);
+    object-fit: cover;
+}
+
+.register-right {
+
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    text-align: left;
+    padding: 35;
+    background-color: var(--color-white);
+    color: var(--color-light);
+    font-family: var(--font-sedan-sc);
+}
+
+.register-right-content {
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+    /* asegura que el padding no rompa el ancho */
+}
+
+.register-right h1::first-letter {
+
+    font-size: 30px;
+    font-weight: 300;
+}
+
+.register-right h1 {
+
+    margin-bottom: 20px;
+    font-size: 25px;
+    color: var(--color-secondary);
+    font-family: var(--font-sedan-sc);
+    font-weight: 500;
+
+}
+
+.register-right p {
+
+    margin-bottom: 15px;
+    width: 450px;
+    color: var(--color-light);
+    font-family: var(--font-sedan);
+}
+
+.register-right form {
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+    gap: 20px;
+}
+
+.register-right label {
+    color: var(--color-primary);
+}
+
+.register-right form input {
+
+    margin-top: 10px;
+    border-radius: 10px;
+    padding: 1rem 2.2rem;
+    width: 550px;
+    font-family: var(--font-sedan);
+    color: var(--color-dark);
+    background-color: var(--color-gray);
+}
+
+.register-right form select {
+
+    margin-top: 10px;
+    border-radius: 10px;
+    padding: 1rem 2.2rem;
+    width: 550px;
+    font-family: var(--font-sedan);
+    color: var(--color-dark);
+    background-color: var(--color-gray);
+
+
+}
+
+.register-right form button {
+
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    font-size: 18px;
+    padding: 20px;
+    width: 350px;
+    margin-left: 100px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.register-right form button:hover {
+
+    background-color: var(--color-secondary);
+}
+
+.register-right-cuenta {
+    font-size: 16px;
+    font-family: var(--font-sedan);
+    width: 400px;
+    margin-left: 135px;
+}

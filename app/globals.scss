@@ -1,0 +1,22 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Sedan+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sedan:ital@0;1&display=swap');
+
+:root {
+  --color-primary: #9C5CE1;
+  --color-purplelight:#dcc8f2;
+  --color-secondary: #C77E01;
+  --color-dark: #222222;
+  --color-light: #777777;
+  --color-white: #fff;
+  --color-gray: #F7F7F7;
+  --font-sedan-sc: "Sedan SC", sans-serif;
+  --font-sedan: "Sedan", sans-serif;
+}
+
+body {
+  background-color: var(--color-light);
+  color: var(--color-light);
+  margin: 0;
+  padding: 0;
+}
