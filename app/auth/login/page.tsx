@@ -22,10 +22,19 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setPopup({ message: `¡Bienvenido ${data.name}!`, type: "success" });
-        setEmail("");
-        setPassword("");
-      } else {
+        const user = data;
+        setPopup({ message: `¡Bienvenido ${user.name}!`, type: "success" });
+
+        /* despues de 1 segundo redirige a la página de maestro o cuidador dependiendo del rol*/
+        setTimeout(() => {
+          if (user.role === "maestro") {
+            window.location.href = "/dashboard/maestro";
+          } else {
+            window.location.href = "/dashboard/cuidador";
+          }
+        }, 1000);
+      }
+      else {
         setPopup({ message: data.error || "Correo o contraseña incorrectos", type: "error" });
       }
     } catch (err) {
