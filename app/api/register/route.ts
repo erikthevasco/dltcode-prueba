@@ -1,27 +1,29 @@
-import mysql from "mysql2/promise";
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { hash } from "bcryptjs";
+
+const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
-    try {
-        const { name, email, password, role } = await req.json();
+  const { name, email, password, rol } = await req.json();
 
-        /*estas creedenciales tienen que coincidir con lo que sale en docker-compose.yml*/
-        const connection = await mysql.createConnection({
-            host: "127.0.0.1",    /*se podria cambiar por localhost*/   
-            user: "root",             
-            password: "root",        
-            database: "dltcode_db"  
-        });
+  if (!email || !password || !name)
+    return NextResponse.json({ error: "Faltan campos" }, { status: 400 });
 
-        const [result] = await connection.execute(
-            "INSERT INTO User (name, email, password, role) VALUES (?, ?, ?, ?)",
-            [name, email, password, role]
-        );
+  const userExists = await prisma.user.findUnique({ where: { email } });
+  if (userExists)
+    return NextResponse.json({ error: "El usuario ya existe" }, { status: 400 });
 
-        await connection.end();
+  const hashed = await hash(password, 10);
 
-        return new Response(JSON.stringify({ success: true, result }), { status: 200 });
-    } catch (err: any) {
-        console.error("Error MySQL:", err);
-        return new Response(JSON.stringify({ error: err.message }), { status: 500 });
-    }
+  await prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashed,
+      rol,
+    },
+  });
+
+  return NextResponse.json({ message: "Usuario creado" });
 }

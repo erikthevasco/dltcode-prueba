@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     if ((rows as any).length > 0) {
       const user = (rows as any)[0];
       return new Response(
-        JSON.stringify({ success: true, name: user.name, role: user.role }),
+        JSON.stringify({ success: true, name: user.name, rol: user.rol }),
         { status: 200 }
       );
     }
