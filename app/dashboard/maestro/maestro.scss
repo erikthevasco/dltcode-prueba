@@ -296,3 +296,28 @@
         cursor: pointer;
     }
 }
+
+/* DISEÑO DEL PROFILE MASTER */
+
+.master-profile-content{
+    display: flex;
+    flex-direction: column;
+
+    label{
+      color: var(--color-primary); 
+      margin-bottom: 15px;
+      margin-top: 10px; 
+    }
+
+    input{
+        background-color: var(--color-gray);
+        padding: 20px;
+        border-radius: 10px;
+        width: 350px;
+        font-family: var(--font-sedan);
+    }
+    input:last-of-type{
+        width:950px;
+        height: auto;
+    }
+}

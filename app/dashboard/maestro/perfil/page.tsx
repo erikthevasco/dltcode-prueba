@@ -2,15 +2,29 @@
 
 import { useState, useEffect } from "react";
 
-interface Creature {
-    id: number;
+interface User {
     name: string;
-    type: string;
-    power: number;
-    trained: string;
+    email: string;
+    role: string;
 }
 
 export default function MasterPerfilPage() {
+
+    const [user, setUser] = useState<User>({
+        name: "",
+        email: "",
+        role: "",
+    });
+
+    useEffect(() => {
+        async function fetchUser() {
+            const res = await fetch("/api/user?userId=1");
+            const data = await res.json();
+            setUser(data.user);
+        }
+        fetchUser();
+    }, []);
+
     return (
         <div className="master-page">
             <div className="master-left">
@@ -30,6 +44,21 @@ export default function MasterPerfilPage() {
                     <h2>MI PERFIL</h2>
                     <p>Este es el lugar donde podrás gestionar, actualizar y personalizar la información de tu perfil.</p>
                 </div>
+
+                <div className="master-profile-content">
+                    <label>Nombre mágico</label>
+                    <input type="text" value={user.name} readOnly />
+
+                    <label>Correo mágico</label>
+                    <input type="text" value={user.email} readOnly />
+
+                    <label>Rol</label>
+                    <input type="text" value={user.role} readOnly />
+
+                    <label>Descripción</label>
+                    <input type="text"/>
+                </div>
+
             </div>
         </div>
     );
