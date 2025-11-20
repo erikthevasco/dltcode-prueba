@@ -1,12 +1,12 @@
-/*DISEÑO GENERAL DE LA PÁGINA MASTER*/
+/*DISEÑO GENERAL DE LA PÁGINA CARETAKER*/
 
-.master-page {
+.caretaker-page {
     display: flex;
     height: 100vh;
 }
 
 /* distribuir la página de manera 20/80*/
-.master-left {
+.caretaker-left {
     flex: 2;
 
     img {
@@ -16,7 +16,7 @@
     }
 }
 
-.master-right {
+.caretaker-right {
     flex: 8;
     display: flex;
     flex-direction: column;
@@ -29,7 +29,7 @@
 }
 
 
-.master-header {
+.caretaker-header {
     width: 100%;
     display: flex;
     gap: 25px;
@@ -52,16 +52,16 @@
     }
 }
 
-.master-header h1::first-letter {
+.caretaker-header h1::first-letter {
     font-size: 35px;
 }
 
 
-.master-header a:hover {
+.caretaker-header a:hover {
     background-color: var(--color-purplelight);
 }
 
-.master-right-content {
+.caretaker-right-content {
     h2 {
         color: var(--color-secondary);
         font-size: 21px;
@@ -76,12 +76,12 @@
     }
 }
 
-.master-right-content h2::first-letter {
+.caretaker-right-content h2::first-letter {
     font-size: 30px;
 }
 
 
-.master-empty-state {
+.caretaker-empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -103,13 +103,13 @@
 }
 
 
-.master-empty-state button:hover {
+.caretaker-empty-state button:hover {
     background-color: var(--color-secondary);
     cursor: pointer;
 }
 
 /*DISEÑO DEL FORMULARIO*/
-.master-creature-form {
+.caretaker-creature-form {
     h1 {
         color: var(--color-secondary);
         font-size: 27px;
@@ -155,7 +155,7 @@
 }
 
 
-.master-creature-form button:hover {
+.caretaker-creature-form button:hover {
     background-color: var(--color-secondary);
 }
 
@@ -184,7 +184,7 @@
     cursor: pointer;
 }
 
-.master-creature-table {
+.caretaker-creature-table {
     .creatures-add-btn button {
         background-color: var(--color-primary);
         color: var(--color-white);
@@ -295,15 +295,11 @@
         cursor: pointer;
         margin-right: 20px;
     }
-
-    .delete-btn {
-        cursor: pointer;
-    }
 }
 
-/* DISEÑO DEL PROFILE MASTER */
+/* DISEÑO DEL PROFILE CARETAKER */
 
-.master-profile-content {
+.caretaker-profile-content {
     display: flex;
     flex-direction: column;
 

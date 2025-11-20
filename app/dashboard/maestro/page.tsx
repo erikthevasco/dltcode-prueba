@@ -128,9 +128,9 @@ export default function MasterPage() {
             };
 
             await fetch("/api/creatures", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updatedCreature),
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedCreature),
             });
 
             setCreatures((prev) =>
@@ -143,17 +143,17 @@ export default function MasterPage() {
         }
     };
 
-    /*funcion borrar linea */
+    /*funcion borrar criatura */
     const deleteCreature = async (id: number) => {
-    const confirmDelete = confirm("¿Seguro que quieres eliminar esta criatura?");
-    if (!confirmDelete) return;
+        const confirmDelete = confirm("¿Seguro que quieres eliminar esta criatura?");
+        if (!confirmDelete) return;
 
-    await fetch(`/api/creatures?id=${id}`, {
-        method: "DELETE",
-    });
+        await fetch(`/api/creatures?id=${id}`, {
+            method: "DELETE",
+        });
 
-    setCreatures((prev) => prev.filter((c) => c.id !== id));
-};
+        setCreatures((prev) => prev.filter((c) => c.id !== id));
+    };
 
 
 
@@ -325,7 +325,14 @@ export default function MasterPage() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {filtered.map((c) => (
+                                            {filtered.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan={5} style={{ textAlign: "center", padding: "1rem" }}>
+                                                        No tienes criaturas de este tipo
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                            filtered.map((c) => (
                                                 <tr key={c.id}>
                                                     <td>
                                                         {editingId === c.id ? (
@@ -411,9 +418,9 @@ export default function MasterPage() {
                                                         </button>
                                                     </td>
                                                 </tr>
-                                            ))}
+                                            ))
+                                        )}
                                         </tbody>
-
                                     </table>
                                 </div>
                             </div>
