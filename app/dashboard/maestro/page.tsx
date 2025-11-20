@@ -12,18 +12,30 @@ interface Creature {
 
 export default function MasterPage() {
 
+    /*variable para cambiar entre interfaces*/
     const [isCreating, setIsCreating] = useState(false);
 
+    /*variables de datos para la bd*/
     const [name, setName] = useState("");
     const [type, setType] = useState("");
     const [power, setPower] = useState("");
     const [trained, setTrained] = useState("");
 
     const [creatures, setCreatures] = useState<Creature[]>([]);
-    const [search, setSearch] = useState("");
 
+    /*variables para el filtrado de la tabla */
+    const [search, setSearch] = useState("");
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [appliedTypes, setAppliedTypes] = useState<string[]>([]);
+
+    /*variables para btn editar*/
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editValues, setEditValues] = useState({
+        name: "",
+        type: "",
+        power: "",
+        trained: ""
+    });
 
     const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -95,6 +107,55 @@ export default function MasterPage() {
         return matchesName && matchesType;
     });
 
+    /*funcion editar*/
+    const startEditing = (c: Creature) => {
+        setEditingId(c.id);
+        setEditValues({
+            name: c.name,
+            type: c.type,
+            power: String(c.power),
+            trained: c.trained
+        });
+    };
+
+    /*funcion guardar editar al darle a enter*/
+    const saveEdit = async (e: React.KeyboardEvent<any>) => {
+        if (e.key === "Enter" && editingId !== null) {
+            const updatedCreature = {
+                id: editingId,
+                ...editValues,
+                power: Number(editValues.power)
+            };
+
+            await fetch("/api/creatures", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedCreature),
+            });
+
+            setCreatures((prev) =>
+                prev.map((c) =>
+                    c.id === editingId ? { ...c, ...updatedCreature } : c
+                )
+            );
+
+            setEditingId(null);
+        }
+    };
+
+    /*funcion borrar linea */
+    const deleteCreature = async (id: number) => {
+    const confirmDelete = confirm("¿Seguro que quieres eliminar esta criatura?");
+    if (!confirmDelete) return;
+
+    await fetch(`/api/creatures?id=${id}`, {
+        method: "DELETE",
+    });
+
+    setCreatures((prev) => prev.filter((c) => c.id !== id));
+};
+
+
 
     return (
         <div className="master-page">
@@ -151,7 +212,7 @@ export default function MasterPage() {
                                         <option value="dragon">Dragón</option>
                                         <option value="fenix">Fénix</option>
                                         <option value="golem">Gólem</option>
-                                                            <option value="vampiro">Vampiro</option>
+                                        <option value="vampiro">Vampiro</option>
                                         <option value="unicornio">Unicornio</option>
 
                                     </select>
@@ -264,31 +325,95 @@ export default function MasterPage() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {filtered.length === 0 ? (
-                                                <tr>
-                                                    <td colSpan={5} style={{ textAlign: "center", padding: "20px" }}>
-                                                        No tienes criaturas de este tipo todavía.
+                                            {filtered.map((c) => (
+                                                <tr key={c.id}>
+                                                    <td>
+                                                        {editingId === c.id ? (
+                                                            <input
+                                                                value={editValues.name}
+                                                                onChange={(e) =>
+                                                                    setEditValues({ ...editValues, name: e.target.value })
+                                                                }
+                                                                onKeyDown={saveEdit}
+                                                                autoFocus
+                                                            />
+                                                        ) : (
+                                                            c.name
+                                                        )}
+                                                    </td>
+
+                                                    <td>
+                                                        {editingId === c.id ? (
+                                                            <select
+                                                                value={editValues.type}
+                                                                onChange={(e) =>
+                                                                    setEditValues({ ...editValues, type: e.target.value })
+                                                                }
+                                                                onKeyDown={saveEdit}
+                                                            >
+                                                                <option value="dragon">dragón</option>
+                                                                <option value="fenix">fénix</option>
+                                                                <option value="golem">gólem</option>
+                                                                <option value="grifo">grifo</option>
+                                                                <option value="vampiro">vampiro</option>
+                                                            </select>
+                                                        ) : (
+                                                            c.type
+                                                        )}
+                                                    </td>
+
+                                                    <td>
+                                                        {editingId === c.id ? (
+                                                            <input
+                                                                type="number"
+                                                                value={editValues.power}
+                                                                onChange={(e) =>
+                                                                    setEditValues({ ...editValues, power: e.target.value })
+                                                                }
+                                                                onKeyDown={saveEdit}
+                                                            />
+                                                        ) : (
+                                                            c.power
+                                                        )}
+                                                    </td>
+
+                                                    <td>
+                                                        {editingId === c.id ? (
+                                                            <select
+                                                                value={editValues.trained}
+                                                                onChange={(e) =>
+                                                                    setEditValues({ ...editValues, trained: e.target.value })
+                                                                }
+                                                                onKeyDown={saveEdit}
+                                                            >
+                                                                <option value="si">Sí</option>
+                                                                <option value="no">No</option>
+                                                            </select>
+                                                        ) : (
+                                                            c.trained === "si" ? "Sí" : "No"
+                                                        )}
+                                                    </td>
+
+                                                    <td>
+                                                        <button
+                                                            className="edit-btn"
+                                                            type="button"
+                                                            onClick={() => startEditing(c)}
+                                                        >
+                                                            ✏️
+                                                        </button>
+                                                        <button
+                                                            className="delete-btn"
+                                                            type="button"
+                                                            onClick={() => deleteCreature(c.id)}
+                                                        >
+                                                            🗑️
+                                                        </button>
                                                     </td>
                                                 </tr>
-                                            ) : (
-                                                filtered.map((c) => (
-                                                    <tr key={c.id}>
-                                                        <td>{c.name}</td>
-                                                        <td>{c.type}</td>
-                                                        <td>{c.power}</td>
-                                                        <td>{c.trained === "si" ? "Sí" : "No"}</td>
-                                                        <td>
-                                                            <button className="edit-btn">
-                                                                ✏️
-                                                            </button>
-                                                            <button className="delete-btn">
-                                                                🗑️
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                ))
-                                            )}
+                                            ))}
                                         </tbody>
+
                                     </table>
                                 </div>
                             </div>
