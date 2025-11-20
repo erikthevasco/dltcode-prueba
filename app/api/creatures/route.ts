@@ -2,27 +2,53 @@ import { NextRequest, NextResponse } from "next/server";
 import db from "../../lib/db";
 
 export async function POST(req: NextRequest) {
-try {
-const body = await req.json();
-const { name, type, power, trained, userId } = body;
+    try {
+        const body = await req.json();
+        const { name, type, power, trained, userId } = body;
 
-    // Validaciones básicas
-    if (!name || !type || !power || !trained || !userId) {
-        return NextResponse.json({ error: "Faltan datos obligatorios" }, { status: 400 });
-    }
+        // Validaciones básicas
+        if (!name || !type || !power || !trained || !userId) {
+            return NextResponse.json({ error: "Faltan datos obligatorios" }, { status: 400 });
+        }
 
-    const query = `
+        const query = `
         INSERT INTO Creatures (name, type, power, trained, user_id)
         VALUES (?, ?, ?, ?, ?)
     `;
 
-    await db.execute(query, [name, type, Number(power), trained, userId]);
+        await db.execute(query, [name, type, Number(power), trained, userId]);
 
-    return NextResponse.json({ message: "Criatura registrada correctamente" }, { status: 201 });
-} catch (err) {
-    console.error(err);
-    return NextResponse.json({ error: "Error al registrar la criatura" }, { status: 500 });
+        return NextResponse.json({ message: "Criatura registrada correctamente" }, { status: 201 });
+    } catch (err) {
+        console.error(err);
+        return NextResponse.json({ error: "Error al registrar la criatura" }, { status: 500 });
+    }
+}
+export async function GET(req: NextRequest) {
+    try {
+        const userId = req.nextUrl.searchParams.get("userId");
+
+        if (!userId) {
+            return NextResponse.json({ error: "Falta userId" }, { status: 400 });
+        }
+
+        const query = `
+      SELECT id, name, type, power, trained
+      FROM Creatures
+      WHERE user_id = ?
+      ORDER BY id DESC
+    `;
+
+        const [rows] = await db.execute(query, [userId]);
+
+        return NextResponse.json({ creatures: rows }, { status: 200 });
+
+    } catch (err) {
+        console.error(err);
+        return NextResponse.json(
+            { error: "Error al obtener criaturas" },
+            { status: 500 }
+        );
+    }
 }
 
-
-}

@@ -1,79 +1,99 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface Creature {
+    id: number;
+    name: string;
+    type: string;
+    power: number;
+    trained: string;
+}
 
 export default function MasterPage() {
 
-    /*esto es indicar si el usuario le ha dado el boton de crear criatura para enseñar el formulario*/
     const [isCreating, setIsCreating] = useState(false);
-    const [popup, setPopup] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
     const [name, setName] = useState("");
     const [type, setType] = useState("");
     const [power, setPower] = useState("");
     const [trained, setTrained] = useState("");
 
+    const [creatures, setCreatures] = useState<Creature[]>([]);
+    const [search, setSearch] = useState("");
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setPopup(null);
+    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+    const [appliedTypes, setAppliedTypes] = useState<string[]>([]);
 
-        /* validaciones */
-        if (!name.trim()) {
-            setPopup({ message: "Debes indicar el nombre de la criatura.", type: "error" });
-            setTimeout(() => setPopup(null), 3000);
-            return;
-        }
-        if (!type) {
-            setPopup({ message: "Debes seleccionar un tipo de criatura.", type: "error" });
-            setTimeout(() => setPopup(null), 3000);
-            return;
-        }
-        if (!power || Number(power) < 0 || Number(power) > 99) {
-            setPopup({ message: "El nivel de poder debe estar entre 0 y 99.", type: "error" });
-            setTimeout(() => setPopup(null), 3000);
-            return;
-        }
-        if (!trained) {
-            setPopup({ message: "Debes indicar si la criatura está entrenada o no.", type: "error" });
-            setTimeout(() => setPopup(null), 3000);
-            return;
-        }
-
-        try {
-            const res = await fetch("/api/creatures", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name,
-                    type,
-                    power: Number(power),
-                    trained,
-                    userId: 1 // temporal para probar
-                })
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.error || "Error al registrar la criatura");
-            }
-
-            setPopup({ message: "Criatura registrada correctamente", type: "success" });
-
-            /* resetear formulario */
-            setName("");
-            setType("");
-            setPower("");
-            setTrained("");
-            setIsCreating(false);
-            setTimeout(() => setPopup(null), 3000);
-
-        } catch (err: any) {
-            setPopup({ message: err.message, type: "error" });
-            setTimeout(() => setPopup(null), 3000);
-        }
+    const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setSelectedTypes((prev) =>
+            prev.includes(value)
+                ? prev.filter((t) => t !== value)
+                : [...prev, value]
+        );
     };
+
+    const applyFilter = (e: any) => {
+        e.preventDefault();
+        setAppliedTypes(selectedTypes);
+    };
+
+    // CARGAR CRIATURAS DEL USUARIO
+    useEffect(() => {
+        fetch("/api/creatures?userId=1")
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.creatures) setCreatures(data.creatures);
+            });
+    }, []);
+
+
+    // SUBMIT DEL FORM
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+
+        const res = await fetch("/api/creatures", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: 1,
+                name,
+                type,
+                power: Number(power),
+                trained,
+            }),
+        });
+
+        const data = await res.json();
+
+        // añadir criatura en pantalla instantáneamente
+        setCreatures((prev) => [
+            {
+                id: data.id ?? Date.now(),
+                name,
+                type,
+                power: Number(power),
+                trained,
+            },
+            ...prev,
+        ]);
+
+        setIsCreating(false);
+        setName("");
+        setType("");
+        setPower("");
+        setTrained("");
+    };
+
+
+    /*filtro buscar*/
+    const filtered = creatures.filter((c) => {
+        const matchesName = c.name.toLowerCase().includes(search.toLowerCase());
+        const matchesType =
+            appliedTypes.length === 0 || appliedTypes.includes(c.type);
+        return matchesName && matchesType;
+    });
 
 
     return (
@@ -81,7 +101,9 @@ export default function MasterPage() {
             <div className="master-left">
                 <img src="/master.png" alt="Master" />
             </div>
+
             <div className="master-right">
+
                 <header className="master-header">
                     <h1>EL SANTUARIO</h1>
                     <a href="/dashboard/maestro">Mis criaturas</a>
@@ -91,133 +113,189 @@ export default function MasterPage() {
 
                 <div className="master-right-content">
                     <h2>MIS CRIATURAS</h2>
-                    <p>Explora y gestiona todas las criaturas mágicas que has recolectado.</p>
+                    <p>Explora y gestiona todas las criaturas que has recolectado. Cada una tiene habilidades únicas y características especiales.</p>
 
-                    {!isCreating && (
+
+                    {/* si no tiene criaturas muestra esta interfaz */}
+                    {creatures.length === 0 && !isCreating && (
                         <div className="master-empty-state">
                             <p className="master-empty-text">
-                                Aún no has añadido ninguna criatura al santuario ¡Empieza tu colección ahora!
+                                Aún no has añadido ninguna criatura.
                             </p>
-                            <button className="master-empty-button" onClick={() => setIsCreating(true)}>
+
+                            <button onClick={() => setIsCreating(true)}>
                                 Añadir nueva criatura
                             </button>
                         </div>
                     )}
-                    {/* al entrar y no tener criaturas sale el mensaje y boton, al hacerle click se cambia el estado
-                     y esconde el mensaje y botón y enseña el formulario */}
+
+                    {/* al darle al boton enseña el formulario y esconde el boton y el mensaje anterior*/}
                     {isCreating && (
                         <form className="master-creature-form" onSubmit={handleSubmit}>
                             <h1>Creador de criaturas mágicas</h1>
 
                             <div className="form-grid">
+
                                 <div className="form-group">
-                                    <label htmlFor="creatureName">Nombre mágico de la criatura</label>
+                                    <label>Nombre mágico</label>
                                     <input
-                                        type="text"
-                                        id="creatureName"
-                                        placeholder="Introduce el nombre de la criatura"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="creatureType">Tipo de criatura</label>
-                                    <select
-                                        id="creatureType"
-                                        value={type}
-                                        onChange={(e) => setType(e.target.value)}
-                                    >
-                                        <option value="">--Selecciona--</option>
+                                    <label>Tipo</label>
+                                    <select value={type} onChange={(e) => setType(e.target.value)}>
+                                        <option value="">Fénix</option>
                                         <option value="dragon">Dragón</option>
                                         <option value="fenix">Fénix</option>
-                                        <option value="golem">Golem</option>
-                                        <option value="vampiro">Vampiro</option>
+                                        <option value="golem">Gólem</option>
+                                                            <option value="vampiro">Vampiro</option>
                                         <option value="unicornio">Unicornio</option>
+
                                     </select>
                                 </div>
 
                                 <div className="form-group">
-                                    <label htmlFor="creaturePower">Nivel de poder</label>
+                                    <label>Poder</label>
                                     <input
                                         type="number"
-                                        id="creaturePower"
-                                        min="0"
-                                        max="99"
-                                        placeholder="1"
                                         value={power}
                                         onChange={(e) => setPower(e.target.value)}
                                     />
                                 </div>
 
-                                <div className="form-group-trained">
+                                <div>
                                     <label className="trained-question">¿Entrenada?</label>
                                     <div className="trained-options">
-                                        <label className="trained-option">
+                                        <label>
                                             <input
                                                 type="radio"
-                                                name="creatureTrained"
                                                 value="si"
                                                 checked={trained === "si"}
                                                 onChange={(e) => setTrained(e.target.value)}
-                                            />
-                                            Sí
+                                            /> Sí
                                         </label>
-                                        <label className="trained-option">
+
+                                        <label>
                                             <input
                                                 type="radio"
-                                                name="creatureTrained"
                                                 value="no"
                                                 checked={trained === "no"}
                                                 onChange={(e) => setTrained(e.target.value)}
-                                            />
-                                            No
+                                            /> No
                                         </label>
                                     </div>
                                 </div>
                             </div>
-
                             <button type="submit">Registrar criatura</button>
+                        </form>
+                    )}
+
+                    {/*si el usuario tiene criaturas muestra esta interfaz*/}
+                    {creatures.length > 0 && !isCreating && (
+                        <form className="master-creature-table" onSubmit={applyFilter}>
+                            <div className="creatures-add-btn">
+                                <button type="button" onClick={() => setIsCreating(true)}>Añadir nueva criatura</button>
+                            </div>
+
+                            <div className="table-grid">
+                                <div className="form_group">
+                                    <h2>Filtrar</h2>
+                                    <h3>Buscar por tipo</h3>
+                                    <div className="filter-options">
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                value="dragon"
+                                                onChange={handleTypeChange}
+                                            ></input>Dragón
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                value="fenix"
+                                                onChange={handleTypeChange}
+                                            ></input>Fénix
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                value="golem"
+                                                onChange={handleTypeChange}
+                                            ></input>Golem
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                value="grifo"
+                                                onChange={handleTypeChange}
+                                            ></input>Grifo
+                                        </label>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                value="vampiro"
+                                                onChange={handleTypeChange}
+                                            ></input>Vampiro
+                                        </label>
+                                        <button type="submit">Confirmar</button>
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <div className="table-input-name">
+                                        <label>Palabra mágica</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Nombre"
+                                            value={search}
+                                            onChange={(e) => setSearch(e.target.value)}
+                                        ></input>
+                                    </div>
+                                    <table className="creatures-table">
+                                        <thead>
+                                            <tr className="table-header">
+                                                <th>Nombre</th>
+                                                <th>Tipo</th>
+                                                <th>Nivel</th>
+                                                <th>Entrenado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {filtered.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan={5} style={{ textAlign: "center", padding: "20px" }}>
+                                                        No tienes criaturas de este tipo todavía.
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                filtered.map((c) => (
+                                                    <tr key={c.id}>
+                                                        <td>{c.name}</td>
+                                                        <td>{c.type}</td>
+                                                        <td>{c.power}</td>
+                                                        <td>{c.trained === "si" ? "Sí" : "No"}</td>
+                                                        <td>
+                                                            <button className="edit-btn">
+                                                                ✏️
+                                                            </button>
+                                                            <button className="delete-btn">
+                                                                🗑️
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </form>
                     )}
                 </div>
             </div>
-
-            {/* diseño del popup */}
-            {popup && (
-                <div className={`popup ${popup.type}`}>
-                    {popup.message}
-                </div>
-            )}
-
-            <style jsx>{`
-                .popup {
-                    position: fixed;
-                    top: 20px;
-                    left: 55%;
-                    transform: translateX(-50%);
-                    padding: 15px 25px;
-                    border-radius: 8px;
-                    color: white;
-                    font-weight: bold;
-                    z-index: 1000;
-                    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-                    animation: fadein 0.3s, fadeout 0.3s 2.7s;
-                }
-
-                .popup.success { background-color: #4caf50; }
-                .popup.error { background-color: #f44336; }
-
-                @keyframes fadein {
-                    from { opacity: 0; transform: translate(-50%, -10px); }
-                    to { opacity: 1; transform: translate(-50%, 0); }
-                }
-
-                @keyframes fadeout {
-                    from { opacity: 1; }
-                    to { opacity: 0; transform: translate(-50%, -10px); }
-                }
-            `}</style>
         </div>
     );
 }

@@ -8,19 +8,16 @@
 /* distribuir la página de manera 20/80*/
 .master-left {
     flex: 2;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 }
 
 .master-right {
     flex: 8;
-}
-
-.master-left img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.master-right {
     display: flex;
     flex-direction: column;
     align-items: left;
@@ -30,6 +27,7 @@
     color: var(--color-light);
     font-family: var(--font-sedan-sc);
 }
+
 
 .master-header {
     width: 100%;
@@ -41,43 +39,47 @@
     font-family: var(--font-sedan-sc);
     color: var(--color-dark);
     align-items: center;
+
+    h1 {
+        margin-right: 480px;
+        color: var(--color-secondary);
+        font-size: 25px;
+    }
+
+    a {
+        padding: 5px;
+        border-radius: 10px;
+    }
 }
 
 .master-header h1::first-letter {
     font-size: 35px;
 }
 
-.master-header h1 {
-    margin-right: 480px;
-    color: var(--color-secondary);
-    font-size: 25px;
-}
-
-.master-header a {
-    padding: 5px;
-    border-radius: 10px;
-}
 
 .master-header a:hover {
     background-color: var(--color-purplelight);
 }
 
-.master-right-content h2 {
-    color: var(--color-secondary);
-    font-size: 21px;
-    margin-bottom: 20px;
+.master-right-content {
+    h2 {
+        color: var(--color-secondary);
+        font-size: 21px;
+        margin-bottom: 20px;
+    }
+
+    p {
+        width: 620px;
+        font-family: var(--font-sedan);
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
 }
 
 .master-right-content h2::first-letter {
     font-size: 30px;
 }
 
-.master-right-content p {
-    width: 620px;
-    font-family: var(--font-sedan);
-    font-size: 18px;
-    margin-bottom: 30px;
-}
 
 .master-empty-state {
     display: flex;
@@ -85,21 +87,21 @@
     align-items: center;
     text-align: center;
     width: 100%;
+
+    p {
+        color: var(--color-dark);
+        width: 450px;
+    }
+
+    button {
+        width: 450px;
+        padding: 18px;
+        border-radius: 10px;
+        background-color: var(--color-primary);
+        color: var(--color-white);
+    }
 }
 
-.master-empty-state p {
-    color: var(--color-dark);
-    width: 450px;
-
-}
-
-.master-empty-state button {
-    width: 450px;
-    padding: 18px;
-    border-radius: 10px;
-    background-color: var(--color-primary);
-    color: var(--color-white);
-}
 
 .master-empty-state button:hover {
     background-color: var(--color-secondary);
@@ -107,16 +109,43 @@
 }
 
 /*DISEÑO DEL FORMULARIO*/
-.master-creature-form h1 {
-    color: var(--color-secondary);
-    font-size: 27px;
-    margin-bottom: 20px;
-    text-align: center;
+.master-creature-form {
+    h1 {
+        color: var(--color-secondary);
+        font-size: 27px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-group label {
+        color: var(--color-primary);
+    }
+
+    button {
+        width: 230px;
+        padding: 15px;
+        border-radius: 10px;
+        background-color: var(--color-primary);
+        color: var(--color-white);
+        text-align: center;
+        margin-left: 400px;
+        margin-top: 20px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .form-group input,
+    select {
+        background-color: var(--color-gray);
+        width: 500px;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 10px;
+        font-family: var(--font-sedan);
+    }
 }
 
-.master-creature-form .form-group label {
-    color: var(--color-primary);
-}
+
 
 .form-grid {
     display: grid;
@@ -125,34 +154,11 @@
     width: 550px;
 }
 
-.master-creature-form button {
-    width: 230px;
-    padding: 15px;
-    border-radius: 10px;
-    background-color: var(--color-primary);
-    color: var(--color-white);
-    text-align: center;
-    margin-left: 400px;
-    margin-top: 20px;
-    font-size: 18px;
-    cursor: pointer;
-
-}
 
 .master-creature-form button:hover {
     background-color: var(--color-secondary);
 }
 
-
-.master-creature-form .form-group input,
-select {
-    background-color: var(--color-gray);
-    width: 500px;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 10px;
-    font-family: var(--font-sedan);
-}
 
 .trained-question {
     display: flex;
@@ -176,4 +182,116 @@ select {
     margin-top: 10px;
     position: relative;
     cursor: pointer;
+}
+
+.master-creature-table {
+    .creatures-add-btn button {
+        background-color: var(--color-primary);
+        color: var(--color-white);
+        border-radius: 10px;
+        padding: 10px;
+        width: 250px;
+        height: 55px;
+        font-size: 18px;
+        margin-bottom: 25px;
+        cursor: pointer;
+    }
+}
+
+.table-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    width: 780px;
+    font-family: var(--font-sedan);
+
+    h3 {
+        color: var(--color-secondary);
+        font-size: 21px;
+        margin-bottom: 10px;
+    }
+}
+
+
+.filter-options {
+    display: flex;
+    flex-direction: column;
+
+    button {
+        background-color: var(--color-primary);
+        color: var(--color-white);
+        font-family: var(--font-sedan-sc);
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 20px;
+        margin-top: 15px;
+        border-color: var(--color-primary);
+        cursor: pointer;
+    }
+
+    label {
+        font-size: 20px;
+        color: var(--color-dark);
+    }
+
+}
+
+.filter-options input[type="checkbox"] {
+    width: 25px;
+    height: 25px;
+    border: 5px solid var(--color-primary);
+    margin-right: 10px;
+    cursor: pointer;
+
+}
+
+.table-input-name {
+    display: flex;
+    flex-direction: column;
+
+    label {
+        color: var(--color-primary);
+        font-family: var(--font-sedan-sc);
+
+    }
+
+    input {
+        background-color: var(--color-gray);
+        border-radius: 10px;
+        padding: 15px;
+        color: var(--color-dark);
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}
+
+.creatures-table {
+    width: 550px;
+
+    thead {
+        color: var(--color-primary);
+        border-bottom: 1 solid;
+        font-size: 18px;
+    }
+
+    .table-header th {
+        padding: 15px;
+        font-weight: 200;
+    }
+
+    tbody {
+        border-bottom: 1 solid;
+    }
+
+    tbody td {
+        padding: 15px;
+    }
+
+    .edit-btn{
+        cursor: pointer;
+        margin-right: 20px;
+    }
+    .delete-btn{
+        cursor: pointer;
+    }
 }
